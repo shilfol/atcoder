@@ -88,28 +88,59 @@ func main() {
 	A := parseInt(spl[0])
 	B := parseInt(spl[1])
 
-	maps := make([][]bool, 100)
-	for i, _ := range maps {
-		maps[i] = make([]bool, 100)
-	}
+	maps := [100][100]bool{}
 
-	h, w := 1, 1
-	ta, tb := 1, 0
+	w, h := 100, 100
 
-	for i := 0; i < 100; i++ {
-		for j := 0; j < 100; j++ {
-			if j%2 == 1 {
-				maps[i][j] = !maps[i][j]
-
-				if maps[i][j] {
-					tb++
-				} else {
-
-				}
+	for i := 0; i < h; i++ {
+		for j := 0; j < w; j++ {
+			if j == 0 || (i%2 == 1 && j != w-1) {
+				maps[i][j] = true
 			}
-
 		}
 	}
 
-	fmt.Println(maps)
+	a, b := 1, 1
+
+	i := 2
+	j := 2
+
+	for a < A {
+		maps[i][j] = true
+		a++
+		j += 2
+
+		if j > 98 {
+			i += 2
+			j = 2
+		}
+	}
+
+	i = 97
+	j = 97
+
+	for b < B {
+		maps[i][j] = false
+		b++
+		j -= 2
+
+		if j < 2 {
+			i -= 2
+			j = 97
+		}
+	}
+
+	fmt.Println(h, w)
+
+	for i := 0; i < h; i++ {
+		for j := 0; j < w; j++ {
+			if maps[i][j] {
+				fmt.Print("#")
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Println()
+	}
+
 }
