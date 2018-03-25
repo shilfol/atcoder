@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -46,15 +47,6 @@ func parseInt(str string) int {
 	return n
 }
 
-func intSprit(str string) []int {
-	strs := strSprit(str)
-	cols := make([]int, len(strs))
-	for i, v := range strs {
-		cols[i] = parseInt(v)
-	}
-	return cols
-}
-
 type SortSlice []int
 
 func (s SortSlice) Len() int {
@@ -83,11 +75,19 @@ func reverseString(str string) string {
 
 func main() {
 	line := nextLine()
-
 	spl := strSprit(line)
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	a := parseInt(spl[0])
+	b := parseInt(spl[1])
+	c := parseInt(spl[2])
+	d := parseInt(spl[3])
 
-	fmt.Println(spl)
+	start := int(math.Max(float64(a), float64(c)))
+	end := int(math.Min(float64(b), float64(d)))
+
+	if start > end {
+		fmt.Println(0)
+	} else {
+		fmt.Println(end - start)
+	}
 }

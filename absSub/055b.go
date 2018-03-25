@@ -46,15 +46,6 @@ func parseInt(str string) int {
 	return n
 }
 
-func intSprit(str string) []int {
-	strs := strSprit(str)
-	cols := make([]int, len(strs))
-	for i, v := range strs {
-		cols[i] = parseInt(v)
-	}
-	return cols
-}
-
 type SortSlice []int
 
 func (s SortSlice) Len() int {
@@ -83,11 +74,16 @@ func reverseString(str string) string {
 
 func main() {
 	line := nextLine()
+	N := parseInt(line)
 
-	spl := strSprit(line)
+	div := 1000000007
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	power := 1
 
-	fmt.Println(spl)
+	for i := 1; i <= N; i++ {
+		power = power * i % div
+	}
+
+	fmt.Println(power)
+
 }
