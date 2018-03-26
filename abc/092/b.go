@@ -83,11 +83,29 @@ func reverseString(str string) string {
 
 func main() {
 	line := nextLine()
+	N := parseInt(line)
 
+	line = nextLine()
 	spl := strSprit(line)
+	D := parseInt(spl[0])
+	X := parseInt(spl[1])
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	a := make([]int, 100)
 
-	fmt.Println(spl)
+	for i := 0; i < N; i++ {
+		line = nextLine()
+		a[i] = parseInt(line)
+	}
+
+	sum := X
+
+	for i := 1; i <= D; i++ {
+		for j := 0; j < N; j++ {
+			if i%a[j] == 1 || a[j] == 1 {
+				sum++
+			}
+		}
+	}
+
+	fmt.Println(sum)
 }

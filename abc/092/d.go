@@ -83,11 +83,64 @@ func reverseString(str string) string {
 
 func main() {
 	line := nextLine()
-
 	spl := strSprit(line)
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	A := parseInt(spl[0])
+	B := parseInt(spl[1])
 
-	fmt.Println(spl)
+	maps := [100][100]bool{}
+
+	w, h := 100, 100
+
+	for i := 0; i < h; i++ {
+		for j := 0; j < w; j++ {
+			if j == 0 || (i%2 == 1 && j != w-1) {
+				maps[i][j] = true
+			}
+		}
+	}
+
+	a, b := 1, 1
+
+	i := 2
+	j := 2
+
+	for a < A {
+		maps[i][j] = true
+		a++
+		j += 2
+
+		if j > 98 {
+			i += 2
+			j = 2
+		}
+	}
+
+	i = 97
+	j = 97
+
+	for b < B {
+		maps[i][j] = false
+		b++
+		j -= 2
+
+		if j < 2 {
+			i -= 2
+			j = 97
+		}
+	}
+
+	fmt.Println(h, w)
+
+	for i := 0; i < h; i++ {
+		for j := 0; j < w; j++ {
+			if maps[i][j] {
+				fmt.Print("#")
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Println()
+	}
+
 }

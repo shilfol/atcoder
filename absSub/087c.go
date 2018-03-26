@@ -83,11 +83,27 @@ func reverseString(str string) string {
 
 func main() {
 	line := nextLine()
+	N := parseInt(line)
 
-	spl := strSprit(line)
+	line = nextLine()
+	a1 := intSprit(line)
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	line = nextLine()
+	a2 := intSprit(line)
 
-	fmt.Println(spl)
+	candy := 0
+
+	tmpcandy := 0
+	for i := 0; i < N; i++ {
+		tmpcandy += a1[i]
+		loopcandy := tmpcandy
+		for j := i; j < N; j++ {
+			loopcandy += a2[j]
+		}
+		if candy < loopcandy {
+			candy = loopcandy
+		}
+	}
+
+	fmt.Println(candy)
 }

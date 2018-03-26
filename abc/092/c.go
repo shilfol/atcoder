@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -81,13 +82,44 @@ func reverseString(str string) string {
 ///        end templates             ///
 ////////////////////////////////////////
 
+func intabs(a, b int) int {
+	return int(math.Abs(float64(a - b)))
+}
+
 func main() {
-	line := nextLine()
+	line := readBigLine()
+	N := parseInt(line)
 
+	a := make([]int, 110000)
+
+	line = readBigLine()
 	spl := strSprit(line)
+	for i := 1; i <= N; i++ {
+		a[i] = parseInt(spl[i-1])
+	}
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	summer := make([]int, 110000)
 
-	fmt.Println(spl)
+	allsum := 0
+
+	for i := 0; i < N; i++ {
+		summer[i] = intabs(a[i], a[i+1])
+		allsum += summer[i]
+	}
+	summer[N] = intabs(a[N], a[0])
+	allsum += summer[N]
+
+	for i := 1; i <= N; i++ {
+		printsum := allsum - summer[i-1] - summer[i]
+
+		if i == N {
+			printsum += intabs(a[i-1], a[0])
+		} else {
+			printsum += intabs(a[i-1], a[i+1])
+		}
+
+		fmt.Println(printsum)
+
+	}
+
 }

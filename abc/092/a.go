@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -83,11 +84,20 @@ func reverseString(str string) string {
 
 func main() {
 	line := nextLine()
+	a := parseInt(line)
 
-	spl := strSprit(line)
+	line = nextLine()
+	b := parseInt(line)
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	line = nextLine()
+	c := parseInt(line)
 
-	fmt.Println(spl)
+	line = nextLine()
+	d := parseInt(line)
+
+	tmin := float64(math.Min(float64(a), float64(b)))
+	bmin := float64(math.Min(float64(c), float64(d)))
+
+	fmt.Println(tmin + bmin)
+
 }
