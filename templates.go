@@ -55,28 +55,6 @@ func intSprit(str string) []int {
 	return cols
 }
 
-type SortSlice []int
-
-func (s SortSlice) Len() int {
-	return len(s)
-}
-
-func (s SortSlice) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-
-func (s SortSlice) Less(i, j int) bool {
-	return s[i] < s[j]
-}
-
-func reverseString(str string) string {
-	buf := []rune(str)
-	for i, j := 0, len(buf)-1; i < j; i, j = i+1, j-1 {
-		buf[i], buf[j] = buf[j], buf[i]
-	}
-	return string(buf)
-}
-
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
