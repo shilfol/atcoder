@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+
 	fmt.Println("generete templates")
 
 	if len(os.Args) < 2 {
@@ -19,7 +20,10 @@ func main() {
 		return
 	}
 
-	// read template file
+	// save template file path
+	dp, _ := os.Getwd()
+	tp := dp + "/templates.go"
+
 	tmpl, err := os.Open("templates.go")
 	if err != nil {
 		fmt.Println("Cannot open template file")
@@ -73,6 +77,13 @@ func main() {
 		if _, oe := os.Stat(gn); os.IsExist(oe) {
 			continue
 		}
+		//read template file
+		tmpl, err := os.Open(tp)
+		if err != nil {
+			fmt.Println("Cannot open template file")
+			return
+		}
+		defer tmpl.Close()
 
 		dst, cerr := os.Create(gn)
 		if cerr != nil {
