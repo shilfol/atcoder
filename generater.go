@@ -15,6 +15,29 @@ func init() {
 	tp = dp + "/templates.go"
 }
 
+func genereteFlie(fn string) error {
+	//read template file
+	tmpl, err := os.Open(tp)
+	if err != nil {
+		fmt.Println("Cannot open template file")
+		return err
+	}
+	defer tmpl.Close()
+
+	dst, cerr := os.Create(fn)
+	if cerr != nil {
+		fmt.Println("Cannot create", fn, "file")
+		return cerr
+	}
+	defer dst.Close()
+
+	if _, coerr := io.Copy(dst, tmpl); coerr != nil {
+		fmt.Println("Cannot copy file")
+		return coerr
+	}
+	return nil
+}
+
 func genereteFileSet(cnt int) error {
 	pList := "abcdefghijklmnopqrstuvwxyz"
 
@@ -23,22 +46,9 @@ func genereteFileSet(cnt int) error {
 		if _, oe := os.Stat(gn); os.IsExist(oe) {
 			continue
 		}
-		//read template file
-		tmpl, err := os.Open(tp)
-		if err != nil {
-			fmt.Println("Cannot open template file")
-			return err
-		}
-		defer tmpl.Close()
 
-		dst, cerr := os.Create(gn)
-		if cerr != nil {
-			fmt.Println("Cannot create", gn, "file")
-		}
-		defer dst.Close()
-
-		if _, coerr := io.Copy(dst, tmpl); coerr != nil {
-			fmt.Println("Cannot copy file")
+		if gerr := genereteFlie(gn); gerr != nil {
+			return gerr
 		}
 
 		fmt.Println("copy success", gn)
