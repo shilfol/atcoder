@@ -7,6 +7,38 @@ import (
 	"strconv"
 )
 
+func genereteFileSet(cnt int, tp string) error {
+	pList := "abcdefghijklmnopqrstuvwxyz"
+
+	for i := 0; i < cnt; i++ {
+		gn := string(pList[i]) + ".go"
+		if _, oe := os.Stat(gn); os.IsExist(oe) {
+			continue
+		}
+		//read template file
+		tmpl, err := os.Open(tp)
+		if err != nil {
+			fmt.Println("Cannot open template file")
+			return err
+		}
+		defer tmpl.Close()
+
+		dst, cerr := os.Create(gn)
+		if cerr != nil {
+			fmt.Println("Cannot create", gn, "file")
+		}
+		defer dst.Close()
+
+		if _, coerr := io.Copy(dst, tmpl); coerr != nil {
+			fmt.Println("Cannot copy file")
+		}
+
+		fmt.Println("copy success", gn)
+	}
+
+	return nil
+}
+
 func main() {
 
 	fmt.Println("generete templates")
@@ -58,8 +90,6 @@ func main() {
 		return
 	}
 
-	pList := "abcdefghijklmnopqrstuvwxyz"
-
 	// read generate file count
 	fc := 4
 	if len(os.Args) > 3 {
@@ -72,29 +102,9 @@ func main() {
 	}
 
 	// generate each file
-	for i := 0; i < fc; i++ {
-		gn := string(pList[i]) + ".go"
-		if _, oe := os.Stat(gn); os.IsExist(oe) {
-			continue
-		}
-		//read template file
-		tmpl, err := os.Open(tp)
-		if err != nil {
-			fmt.Println("Cannot open template file")
-			return
-		}
-		defer tmpl.Close()
-
-		dst, cerr := os.Create(gn)
-		if cerr != nil {
-			fmt.Println("Cannot create", gn, "file")
-		}
-		defer dst.Close()
-
-		if _, coerr := io.Copy(dst, tmpl); coerr != nil {
-			fmt.Println("Cannot copy file")
-		}
-
-		fmt.Println("copy success", gn)
+	if gerr := genereteFileSet(fc, tp); gerr != nil {
+		fmt.Println(gerr)
+		return
 	}
+
 }
