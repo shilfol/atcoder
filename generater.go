@@ -7,7 +7,15 @@ import (
 	"strconv"
 )
 
-func genereteFileSet(cnt int, tp string) error {
+var tp string
+
+func init() {
+	// save template file path
+	dp, _ := os.Getwd()
+	tp = dp + "/templates.go"
+}
+
+func genereteFileSet(cnt int) error {
 	pList := "abcdefghijklmnopqrstuvwxyz"
 
 	for i := 0; i < cnt; i++ {
@@ -35,7 +43,6 @@ func genereteFileSet(cnt int, tp string) error {
 
 		fmt.Println("copy success", gn)
 	}
-
 	return nil
 }
 
@@ -51,17 +58,6 @@ func main() {
 		fmt.Println("input contest number")
 		return
 	}
-
-	// save template file path
-	dp, _ := os.Getwd()
-	tp := dp + "/templates.go"
-
-	tmpl, err := os.Open("templates.go")
-	if err != nil {
-		fmt.Println("Cannot open template file")
-		return
-	}
-	defer tmpl.Close()
 
 	dirName := os.Args[1]
 	conNum := os.Args[2]
@@ -102,9 +98,8 @@ func main() {
 	}
 
 	// generate each file
-	if gerr := genereteFileSet(fc, tp); gerr != nil {
+	if gerr := genereteFileSet(fc); gerr != nil {
 		fmt.Println(gerr)
 		return
 	}
-
 }
