@@ -72,7 +72,10 @@ func bitCount(n uint) int {
 	x += x >> 32
 
 	return int(x) & (1<<7 - 1)
+}
 
+func bitExist(n, i int) bool {
+	return ((n >> uint(i)) & 1) == 1
 }
 
 ////////////////////////////////////////
