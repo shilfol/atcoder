@@ -55,6 +55,26 @@ func intSprit(str string) []int {
 	return cols
 }
 
+func bitCount(n uint) int {
+
+	x := uint64(n)
+
+	const m = 1<<64 - 1
+	const m0 = 0x5555555555555555
+	const m1 = 0x3333333333333333
+	const m2 = 0x0f0f0f0f0f0f0f0f
+
+	x = x>>1&(m0&m) + x&(m0&m)
+	x = x>>2&(m1&m) + x&(m1&m)
+	x = (x>>4 + x) & (m2 & m)
+	x += x >> 8
+	x += x >> 16
+	x += x >> 32
+
+	return int(x) & (1<<7 - 1)
+
+}
+
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
