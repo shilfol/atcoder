@@ -75,20 +75,68 @@ func bitCount(n uint) int {
 }
 
 func bitExist(n, i int) bool {
-	return ((n >> uint(i)) & 1) == 1
+	s := uint(i)
+
+	return ((n >> s) & 1) == 1
 }
 
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
+func matchCombo(i int, param []int) bool {
+	c := 0
+
+	for _, v := range param {
+		if bitExist(i, v-1) {
+			c++
+		}
+	}
+
+	return c >= 3
+}
+
+func calcParam(n int, A []int, params [][]int) int {
+	ret := 0
+	for i := 0; i < len(A); i++ {
+		if bitExist(n, i) {
+			ret += A[i]
+		}
+	}
+
+	for _, param := range params {
+		if matchCombo(n, param[2:]) {
+			ret += param[0]
+		}
+	}
+
+	return ret
+}
 
 func main() {
-	line := nextLine()
+	nums := nextLine()
+	nspl := strSprit(nums)
+	N := parseInt(nspl[0])
+	M := parseInt(nspl[1])
 
-	spl := strSprit(line)
+	idol := nextLine()
+	A := intSprit(idol)
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	params := make([][]int, M)
 
-	fmt.Println(spl)
+	for i := 0; i < M; i++ {
+		t := nextLine()
+		params[i] = intSprit(t)
+	}
+
+	max := 0
+	for i := 0; i < (1 << uint(N)); i++ {
+		if bitCount(uint(i)) == 9 {
+			ts := calcParam(i, A, params)
+			if max < ts {
+				max = ts
+			}
+		}
+	}
+
+	fmt.Println(max)
 }

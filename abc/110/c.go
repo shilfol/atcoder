@@ -55,40 +55,49 @@ func intSprit(str string) []int {
 	return cols
 }
 
-func bitCount(n uint) int {
-
-	x := uint64(n)
-
-	const m = 1<<64 - 1
-	const m0 = 0x5555555555555555
-	const m1 = 0x3333333333333333
-	const m2 = 0x0f0f0f0f0f0f0f0f
-
-	x = x>>1&(m0&m) + x&(m0&m)
-	x = x>>2&(m1&m) + x&(m1&m)
-	x = (x>>4 + x) & (m2 & m)
-	x += x >> 8
-	x += x >> 16
-	x += x >> 32
-
-	return int(x) & (1<<7 - 1)
-}
-
-func bitExist(n, i int) bool {
-	return ((n >> uint(i)) & 1) == 1
-}
-
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
 
 func main() {
-	line := nextLine()
+	S := readBigLine()
+	T := readBigLine()
 
-	spl := strSprit(line)
+	sm := map[rune]int{}
+	ss := make([][]int, 26)
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	sk := 0
+	for i, s := range S {
+		if im, ok := sm[s]; !ok {
+			sm[s] = sk
+			ss[sk] = []int{i}
+			sk++
+		} else {
+			ss[im] = append(ss[im], i)
+		}
+	}
 
-	fmt.Println(spl)
+	tm := map[rune]int{}
+	tk := 0
+	var si int
+	for i, t := range T {
+		if _, ok := tm[t]; !ok {
+			tm[t] = tk
+			tk++
+		}
+		tmi := tm[t]
+
+		if len(ss[tmi]) <= 0 {
+			fmt.Println("No")
+			return
+		}
+		si, ss[tmi] = ss[tmi][0], ss[tmi][1:]
+
+		if si != i {
+			fmt.Println("No")
+			return
+		}
+	}
+
+	fmt.Println("Yes")
 }

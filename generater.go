@@ -7,6 +7,55 @@ import (
 	"strconv"
 )
 
+var tp string
+
+func init() {
+	// save template file path
+	dp, _ := os.Getwd()
+	tp = dp + "/templates.go"
+}
+
+func genereteFlie(fn string) error {
+	//read template file
+	tmpl, err := os.Open(tp)
+	if err != nil {
+		fmt.Println("Cannot open template file")
+		return err
+	}
+	defer tmpl.Close()
+
+	dst, cerr := os.Create(fn)
+	if cerr != nil {
+		fmt.Println("Cannot create", fn, "file")
+		return cerr
+	}
+	defer dst.Close()
+
+	if _, coerr := io.Copy(dst, tmpl); coerr != nil {
+		fmt.Println("Cannot copy file")
+		return coerr
+	}
+	return nil
+}
+
+func genereteFileSet(cnt int) error {
+	pList := "abcdefghijklmnopqrstuvwxyz"
+
+	for i := 0; i < cnt; i++ {
+		gn := string(pList[i]) + ".go"
+		if _, oe := os.Stat(gn); os.IsExist(oe) {
+			continue
+		}
+
+		if gerr := genereteFlie(gn); gerr != nil {
+			return gerr
+		}
+
+		fmt.Println("copy success", gn)
+	}
+	return nil
+}
+
 func main() {
 
 	fmt.Println("generete templates")
@@ -19,17 +68,6 @@ func main() {
 		fmt.Println("input contest number")
 		return
 	}
-
-	// save template file path
-	dp, _ := os.Getwd()
-	tp := dp + "/templates.go"
-
-	tmpl, err := os.Open("templates.go")
-	if err != nil {
-		fmt.Println("Cannot open template file")
-		return
-	}
-	defer tmpl.Close()
 
 	dirName := os.Args[1]
 	conNum := os.Args[2]
@@ -58,8 +96,6 @@ func main() {
 		return
 	}
 
-	pList := "abcdefghijklmnopqrstuvwxyz"
-
 	// read generate file count
 	fc := 4
 	if len(os.Args) > 3 {
@@ -72,29 +108,8 @@ func main() {
 	}
 
 	// generate each file
-	for i := 0; i < fc; i++ {
-		gn := string(pList[i]) + ".go"
-		if _, oe := os.Stat(gn); os.IsExist(oe) {
-			continue
-		}
-		//read template file
-		tmpl, err := os.Open(tp)
-		if err != nil {
-			fmt.Println("Cannot open template file")
-			return
-		}
-		defer tmpl.Close()
-
-		dst, cerr := os.Create(gn)
-		if cerr != nil {
-			fmt.Println("Cannot create", gn, "file")
-		}
-		defer dst.Close()
-
-		if _, coerr := io.Copy(dst, tmpl); coerr != nil {
-			fmt.Println("Cannot copy file")
-		}
-
-		fmt.Println("copy success", gn)
+	if gerr := genereteFileSet(fc); gerr != nil {
+		fmt.Println(gerr)
+		return
 	}
 }

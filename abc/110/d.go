@@ -55,40 +55,31 @@ func intSprit(str string) []int {
 	return cols
 }
 
-func bitCount(n uint) int {
-
-	x := uint64(n)
-
-	const m = 1<<64 - 1
-	const m0 = 0x5555555555555555
-	const m1 = 0x3333333333333333
-	const m2 = 0x0f0f0f0f0f0f0f0f
-
-	x = x>>1&(m0&m) + x&(m0&m)
-	x = x>>2&(m1&m) + x&(m1&m)
-	x = (x>>4 + x) & (m2 & m)
-	x += x >> 8
-	x += x >> 16
-	x += x >> 32
-
-	return int(x) & (1<<7 - 1)
-}
-
-func bitExist(n, i int) bool {
-	return ((n >> uint(i)) & 1) == 1
-}
-
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
+func divs(n int) int {
+	if n%2 == 0 {
+		return 2
+	} else {
+		for i := 3; i < n; i += 2 {
+			if n%i == 0 {
+				return i
+			}
+		}
+	}
+	return -1
+}
 
 func main() {
 	line := nextLine()
 
 	spl := strSprit(line)
 
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
+	N := parseInt(spl[0])
+	M := parseInt(spl[1])
 
-	fmt.Println(spl)
+	fmt.Println(divs(N))
+	fmt.Println(divs(M))
+
 }
