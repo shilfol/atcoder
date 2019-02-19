@@ -86,9 +86,4 @@ func main() {
 	line := nextLine()
 
 	spl := strSprit(line)
-
-	nums := make(SortSlice, N)
-	sort.Sort(nums)
-
-	fmt.Println(spl)
 }
