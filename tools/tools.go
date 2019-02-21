@@ -11,6 +11,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 	"syscall"
 
@@ -21,6 +22,11 @@ import (
 type UserInfo struct {
 	Username string `json:"user_name"`
 	Password string `json:"password"`
+}
+
+type TestCase struct {
+	Input  string `json:"input"`
+	Output string `json:"output"`
 }
 
 var client *http.Client
@@ -186,8 +192,37 @@ func indexInHtml(t string, r io.ReadCloser) int {
 	return -1
 }
 
-func fetchTestcase() {
+func fetchTestcase(cn string) {
+	URL := "https://atcoder.jp/contests/" + cn + "/tasks/" + cn + "_d"
 
+	fmt.Println(URL)
+	resp, err := client.Get(URL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	d, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	prp := regexp.MustCompile(`<section>\s*<h3>[入出]力例[\s\S]+?</h3>([\s\S]+?)</section>`)
+	l := prp.FindAllString(string(d), -1)
+
+	ret := make([]TestCase, len(l)/2)
+
+	rp := regexp.MustCompile(`<pre.*?>([\s\S]+?)</pre>`)
+	for i, v := range l {
+		r := rp.FindAllStringSubmatch(string(v), -1)
+		if i%2 == 0 {
+			ret[i/2].Input = r[0][1]
+		} else {
+			ret[i/2].Output = r[0][1]
+		}
+	}
+
+	fmt.Println(ret)
 }
 func doTestcase() {
 
@@ -198,8 +233,8 @@ func postAnswer() {
 }
 
 func TrySolve() {
-	tryLogin()
-	//fetchTestcase()
+	//tryLogin()
+	fetchTestcase("abc118")
 	//doTestcase()
 
 	//postAnswer()
