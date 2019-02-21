@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,6 +15,7 @@ import (
 	"syscall"
 
 	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/net/html"
 )
 
 type UserInfo struct {
@@ -58,7 +60,7 @@ func inputUserInfo() UserInfo {
 		if err := json.Unmarshal(d, &info); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("* read: .userinfo.json")
+		fmt.Println("* read:", infofile)
 		return info
 	} else {
 		fmt.Println(fe)
@@ -86,9 +88,17 @@ func inputUserInfo() UserInfo {
 	if err := ioutil.WriteFile(infofile, mar, 0600); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("* write: .userinfo.json")
+	fmt.Println("* write:", infofile)
 
 	return info
+}
+
+func removeUserInfo() {
+	infofile := ".userinfo.json"
+	if err := os.Remove(infofile); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("* delete:", infofile)
 }
 
 func fetchSession(n string) {
@@ -119,37 +129,61 @@ func fetchSession(n string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(pres)
-	v, _ := ioutil.ReadAll(pres.Body)
-	fmt.Println(string(v))
+
+	if n := indexInHtml("Sign", pres.Body); n < 0 {
+		fmt.Println("! login failed")
+		removeUserInfo()
+	}
+	fmt.Println("* login success")
 
 	defer resp.Body.Close()
 
-	pdata := url.Values{}
-	pdata.Add("data.TaskScreenName", "abc118_d")
-	pdata.Add("data.LanguageId", "3013")
-	pdata.Add("csrf_token", csrfToken)
+	/*
+		pdata := url.Values{}
+		pdata.Add("data.TaskScreenName", "abc118_d")
+		pdata.Add("data.LanguageId", "3013")
+		pdata.Add("csrf_token", csrfToken)
 
-	f, err := os.Open("./abc/118/d-dp.go")
-	if err != nil {
-		log.Fatal(err)
+		f, err := os.Open("./abc/118/d-dp.go")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+		fv, _ := ioutil.ReadAll(f)
+
+		pdata.Add("sourceCode", string(fv))
+
+		SURL := "https://atcoder.jp/contests/abc118/submit"
+
+		sres, err := client.PostForm(SURL, pdata)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(sres)
+		sv, _ := ioutil.ReadAll(sres.Body)
+		fmt.Println(string(sv))
+		defer sres.Body.Close()
+	*/
+
+}
+
+func indexInHtml(t string, r io.ReadCloser) int {
+	tk := html.NewTokenizer(r)
+
+	for {
+		tt := tk.Next()
+		if tt == html.ErrorToken {
+			return -1
+		}
+
+		tn, _ := tk.TagName()
+		if string(tn) == "title" {
+			tk.Next()
+			fmt.Println(string(tk.Text()))
+			return strings.Index((string(tk.Text())), t)
+		}
 	}
-	defer f.Close()
-	fv, _ := ioutil.ReadAll(f)
-
-	pdata.Add("sourceCode", string(fv))
-
-	SURL := "https://atcoder.jp/contests/abc118/submit"
-
-	sres, err := client.PostForm(SURL, pdata)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(sres)
-	sv, _ := ioutil.ReadAll(sres.Body)
-	fmt.Println(string(sv))
-	defer sres.Body.Close()
-
+	return -1
 }
 
 func fetchTestcase() {
