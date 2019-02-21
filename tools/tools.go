@@ -2,6 +2,7 @@ package tools
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -15,13 +16,21 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-type ContestInfo struct {
-	ContestName string `json:"contest_name"`
-	User        string `json:"user"`
+type UserInfo struct {
+	Username string `json:"user_name"`
+	Password string `json:"password"`
 }
 
-type Session struct {
-	Session string `json:session`
+var client *http.Client
+
+func init() {
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	client = &http.Client{
+		Jar: jar,
+	}
 }
 
 func tryLogin() {
@@ -35,31 +44,58 @@ func tryLogin() {
 	if err != nil {
 		fmt.Println(err)
 	}
-
 }
 
-func fetchSession(n string) {
+func inputUserInfo() UserInfo {
+	var info UserInfo
+	infofile := ".userinfo.json"
+
+	if _, fe := os.Stat(infofile); !os.IsNotExist(fe) {
+		d, err := ioutil.ReadFile(infofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err := json.Unmarshal(d, &info); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("* read: .userinfo.json")
+		return info
+	} else {
+		fmt.Println(fe)
+	}
+
+	fmt.Println("* input userinfo")
 	sc := bufio.NewScanner(os.Stdin)
 	fmt.Print("Username: ")
 	sc.Scan()
-	name := sc.Text()
+	info.Username = sc.Text()
 
 	fmt.Print("Password: ")
 	pass, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
-	sp := string(pass)
+	info.Password = string(pass)
+	fmt.Println()
 
-	URL := "https://atcoder.jp/login"
-
-	jar, err := cookiejar.New(nil)
+	mar, err := json.Marshal(info)
 	if err != nil {
 		log.Fatal(err)
 	}
-	client := &http.Client{
-		Jar: jar,
+
+	if err := ioutil.WriteFile(infofile, mar, 0600); err != nil {
+		log.Fatal(err)
 	}
+	fmt.Println("* write: .userinfo.json")
+
+	return info
+}
+
+func fetchSession(n string) {
+
+	info := inputUserInfo()
+
+	URL := "https://atcoder.jp/login"
 
 	resp, err := client.Get(URL)
 	if err != nil {
@@ -76,8 +112,8 @@ func fetchSession(n string) {
 
 	data := url.Values{}
 	data.Add("csrf_token", csrfToken)
-	data.Add("password", sp)
-	data.Add("username", name)
+	data.Add("password", info.Password)
+	data.Add("username", info.Username)
 
 	pres, err := client.PostForm(URL, data)
 	if err != nil {
