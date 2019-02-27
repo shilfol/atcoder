@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -81,9 +83,64 @@ func bitExist(n, i int) bool {
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
+func parseInt64(str string) int64 {
+	n, _ := strconv.ParseInt(str, 10, 64)
+	return n
+}
+
+func min64(nums ...int64) int64 {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+
+	res := nums[0]
+	for i := 1; i < len(nums); i++ {
+		res = int64(math.Min(float64(res), float64(nums[i])))
+	}
+	return res
+}
+
+func intAbs(n int64) int64 {
+	return int64(math.Abs(float64(n)))
+}
 
 func main() {
 	line := nextLine()
+	spl := intSprit(line)
 
-	spl := strSprit(line)
+	A := spl[0]
+	B := spl[1]
+	Q := spl[2]
+
+	s := make([]int64, A)
+	t := make([]int64, B)
+
+	for i := 0; i < A; i++ {
+		s[i] = parseInt64(nextLine())
+	}
+	for i := 0; i < B; i++ {
+		t[i] = parseInt64(nextLine())
+	}
+
+	for i := 0; i < Q; i++ {
+		x := parseInt64(nextLine())
+		si := sort.Search(len(s), func(idx int) bool { return s[idx] >= x })
+		ti := sort.Search(len(t), func(idx int) bool { return t[idx] >= x })
+
+		res := int64(1 << 60)
+		for n := si - 1; n <= si; n++ {
+			if n < 0 || n >= len(s) {
+				continue
+			}
+			for m := ti - 1; m <= ti; m++ {
+				if m < 0 || m >= len(t) {
+					continue
+				}
+				forward := intAbs(s[n]-x) + intAbs(s[n]-t[m])
+				back := intAbs(t[m]-x) + intAbs(s[n]-t[m])
+				res = min64(res, forward, back)
+			}
+		}
+		fmt.Println(res)
+	}
 }
