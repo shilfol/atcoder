@@ -1,7 +1,7 @@
 package main
 
 import (
-	t "./tools"
+	t "github.com/shilfol/atcoderTools"
 )
 
 func main() {
