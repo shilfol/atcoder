@@ -78,15 +78,6 @@ func bitExist(n, i int) bool {
 	return ((n >> uint(i)) & 1) == 1
 }
 
-func setBit(d, n int) int {
-	t := 1 << uint(n)
-	return d | t
-}
-
-func intAbs(n int) int {
-	return int(math.Abs(float64(n)))
-}
-
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////

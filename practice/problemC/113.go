@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -78,21 +79,49 @@ func bitExist(n, i int) bool {
 	return ((n >> uint(i)) & 1) == 1
 }
 
-func setBit(d, n int) int {
-	t := 1 << uint(n)
-	return d | t
-}
-
-func intAbs(n int) int {
-	return int(math.Abs(float64(n)))
-}
-
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
+type Pair struct {
+	p, y int
+}
 
 func main() {
 	line := nextLine()
 
 	spl := strSprit(line)
+	N := parseInt(spl[0])
+	M := parseInt(spl[1])
+
+	indexes := make(map[Pair]int, M)
+	years := make([][]int, N+1)
+	for i := 0; i <= N; i++ {
+		years[i] = []int{}
+	}
+
+	for i := 1; i <= M; i++ {
+		s := intSprit(nextLine())
+		years[s[0]] = append(years[s[0]], s[1])
+		p := Pair{s[0], s[1]}
+		indexes[p] = i
+	}
+
+	for i := 0; i <= N; i++ {
+		sort.Ints(years[i])
+	}
+
+	ans := make([]string, M+1)
+
+	for i := 1; i <= N; i++ {
+		y := years[i]
+		for idx, val := range y {
+			tp := Pair{i, val}
+			ai := indexes[tp]
+			ans[ai] = fmt.Sprintf("%06d%06d", i, idx+1)
+		}
+	}
+	for i := 1; i <= M; i++ {
+		fmt.Println(ans[i])
+	}
+
 }
