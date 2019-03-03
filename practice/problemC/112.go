@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -90,9 +91,56 @@ func intAbs(n int) int {
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
+func calcHeight(x, y, cx, cy, h int) int {
+	xa := intAbs(x - cx)
+	ya := intAbs(y - cy)
+
+	return h + xa + ya
+}
+func checkHeight(H, x, y, cx, cy, h int) bool {
+	if h > 0 {
+		return h == (H - intAbs(x-cx) - intAbs(y-cy))
+	} else if h == 0 {
+		return (H - intAbs(x-cx) - intAbs(y-cy)) <= 0
+	}
+	return false
+}
 
 func main() {
 	line := nextLine()
+	N := parseInt(line)
 
-	spl := strSprit(line)
+	q := make([][]int, N)
+
+	sh := -1
+	sx := -1
+	sy := -1
+	for i := 0; i < N; i++ {
+		q[i] = intSprit(nextLine())
+		if sh < 0 && q[i][2] > 0 {
+			sx = q[i][0]
+			sy = q[i][1]
+			sh = q[i][2]
+		}
+	}
+
+	for i := 0; i <= 100; i++ {
+		for j := 0; j <= 100; j++ {
+			H := calcHeight(sx, sy, i, j, sh)
+			if H <= 0 {
+				H = 0
+			}
+			isComp := true
+			for _, v := range q {
+				if !checkHeight(H, v[0], v[1], i, j, v[2]) {
+					isComp = false
+					break
+				}
+			}
+			if isComp {
+				fmt.Println(i, j, H)
+				return
+			}
+		}
+	}
 }

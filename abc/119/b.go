@@ -46,6 +46,11 @@ func parseInt(str string) int {
 	return n
 }
 
+func parseFloat(str string) float64 {
+	n, _ := strconv.ParseFloat(str, 64)
+	return n
+}
+
 func intSprit(str string) []int {
 	strs := strSprit(str)
 	cols := make([]int, len(strs))
@@ -78,21 +83,29 @@ func bitExist(n, i int) bool {
 	return ((n >> uint(i)) & 1) == 1
 }
 
-func setBit(d, n int) int {
-	t := 1 << uint(n)
-	return d | t
-}
-
-func intAbs(n int) int {
-	return int(math.Abs(float64(n)))
-}
-
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
 
 func main() {
-	line := nextLine()
+	btc := 380000.0
 
-	spl := strSprit(line)
+	line := nextLine()
+	N := parseInt(line)
+
+	res := 0.0
+	for i := 0; i < N; i++ {
+		l := nextLine()
+		s := strSprit(l)
+
+		n := parseFloat(s[0])
+
+		if s[1] == "JPY" {
+			res += n
+		} else {
+			res += btc * n
+		}
+	}
+
+	fmt.Printf("%.5f", res)
 }

@@ -37,7 +37,7 @@ func readBigLine() string {
 }
 
 func strSprit(str string) []string {
-	cols := strings.Split(str, " ")
+	cols := strings.Split(str, "/")
 	return cols
 }
 
@@ -78,15 +78,6 @@ func bitExist(n, i int) bool {
 	return ((n >> uint(i)) & 1) == 1
 }
 
-func setBit(d, n int) int {
-	t := 1 << uint(n)
-	return d | t
-}
-
-func intAbs(n int) int {
-	return int(math.Abs(float64(n)))
-}
-
 ////////////////////////////////////////
 ///        end templates             ///
 ////////////////////////////////////////
@@ -94,5 +85,18 @@ func intAbs(n int) int {
 func main() {
 	line := nextLine()
 
-	spl := strSprit(line)
+	spl := intSprit(line)
+
+	if spl[0] < 2019 {
+		fmt.Println("Heisei")
+		return
+	} else if spl[0] > 2019 {
+		fmt.Println("TBD")
+		return
+	}
+	if spl[1] <= 4 {
+		fmt.Println("Heisei")
+	} else {
+		fmt.Println("TBD")
+	}
 }
