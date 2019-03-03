@@ -4,6 +4,8 @@ github.com/shilfol/atcoderTools v0.0.0-20190301082509-d3694c5e65c7 h1:g/Bs/DuiFJ
 github.com/shilfol/atcoderTools v0.0.0-20190301082509-d3694c5e65c7/go.mod h1:5Dpd8zCQFFAHx/ldaG6wBBAVazcQSqAQFEvApeZPcT4=
 github.com/shilfol/atcoderTools v0.0.0-20190303092512-c500b0b5b778 h1:nqaL9tmdbDdktLS/A0pPPqHlst9AkAEw0BUYVOp26fo=
 github.com/shilfol/atcoderTools v0.0.0-20190303092512-c500b0b5b778/go.mod h1:24vXm2Ck+q1DXIYoJ4sMu0Hu75EUUmyLqTW4G+Ey7II=
+github.com/shilfol/atcoderTools v0.0.0-20190303103316-fb35f2114217 h1:GCBergzZZlRXlqSWe6ywjD+iGjoQVhLZ9DnOmFo8n0I=
+github.com/shilfol/atcoderTools v0.0.0-20190303103316-fb35f2114217/go.mod h1:24vXm2Ck+q1DXIYoJ4sMu0Hu75EUUmyLqTW4G+Ey7II=
 golang.org/x/crypto v0.0.0-20190225124518-7f87c0fbb88b h1:+/WWzjwW6gidDJnMKWLKLX1gxn7irUTF1fLpQovfQ5M=
 golang.org/x/crypto v0.0.0-20190225124518-7f87c0fbb88b/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25 h1:jsG6UpNLt9iAsb0S2AGW28DveNzzgmbXR+ENoPjUeIU=
