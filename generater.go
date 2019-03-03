@@ -12,7 +12,7 @@ var tp string
 func init() {
 	// save template file path
 	dp, _ := os.Getwd()
-	tp = dp + "template/templates.go"
+	tp = dp + "/template/templates.go"
 }
 
 func genereteFlie(fn string) error {
