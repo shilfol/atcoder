@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -95,4 +96,6 @@ func main() {
 	line := nextLine()
 
 	spl := strSprit(line)
+
+	fmt.Println(spl)
 }
